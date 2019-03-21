@@ -1,17 +1,19 @@
-
 const gallery = document.querySelector('#gallery');
 
 
 
+
+
+
+// Request data for 12 random users
 fetch('https://randomuser.me/api/?results=12')
 	.then( response => response.json() )
 	.then( data => displayEmployees(data.results) );
 
-
 function displayEmployees(employees) {
 	console.log(employees);
 
-	let html = ``;
+	let html = '';
 
 	employees.map(function(employee) {
 		html += `
@@ -27,7 +29,7 @@ function displayEmployees(employees) {
 				</div>
 			</div>
 		`;
-	})
+	});
 
 	gallery.innerHTML = html;
 }
