@@ -14,11 +14,11 @@ This project uses JavaScript to create an employee directory by communicating wi
 
 ## Project objective
 
-<!-- To complete this project I created two JavaScript classes with specific properties and methods. A Game class for managing the game, and a Phrase class to help with creating an array of Phrase objects. The code chooses a random phrase, splits the phrase into letters, and puts those letters onto the gameboard. Each time the player guesses a letter, the program compares the letter the player has chosen with the random phrase.
+This project required me to build an app for a fictional company called Awesome Startup, a distributed company with remote employees working all over the world. They are in need of a smart way for employees to share contact information with each other.
 
-If the letter is in the phrase, the gameboard displays the chosen letters on the screen. The player continues to select letters until they guess the phrase (and win), or make five incorrect guesses (and lose).
+I used the Random User Generator API (https://randomuser.me/) to grab information for 12 random “employees,” and used that data to build a prototype for an Awesome Startup employee directory.
 
-If the player completes the phrase before they run out of guesses, a winning screen appears. If the player guesses incorrectly five times, a losing screen appears. The player can guess a letter only once. After they’ve guessed a letter, the program disables that letter. -->
+I requested a JSON object from the API and parsed the data so that 12 employees are listed in a grid with their thumbnail image, full name, email, and location. Clicking the employee’s image or name opens a modal window with more detailed information, such as the employee’s birthday and address.
 
 ## Techniques and concepts
 
