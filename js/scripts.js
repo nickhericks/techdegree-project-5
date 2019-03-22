@@ -14,7 +14,7 @@ fetch('https://randomuser.me/api/?results=12&nat=us')
 function displayEmployees(employees) {
 	let html = '';
 	employeeList = employees;
-	console.log(employeeList);
+	// console.log(employeeList);
 	employees.map(function(employee) {
 		html += `
 			<div class="card">
@@ -100,56 +100,45 @@ function openModal(event) {
 
 		updateInfo(currentIndex);
 
-
 		const closeButton = document.querySelector('.modal-close-btn');
+		const prev = document.querySelector("#modal-prev");
+    const next = document.querySelector("#modal-next");
+
 		closeButton.addEventListener('click', e => closeModal(e));
 
+		if (currentIndex === 0) hide(prev);
+		if (currentIndex === 11) hide(next);
 
-		const prevButton = document.querySelector('#modal-prev');
-		const nextButton = document.querySelector('#modal-next');
-
-		if(currentIndex === 0) {
-			hideButton(prevButton);
-		}
-
-		if(currentIndex === 11) {
-			hideButton(nextButton);
-		}
-
-		prevButton.addEventListener('click', () => updateEmployee(prevButton, nextButton)
-		);
-		nextButton.addEventListener('click', () => updateEmployee(nextButton, prevButton)
-		);
-
+		prev.addEventListener('click', () => updateModal(prev, next));
+		next.addEventListener('click', () => updateModal(next, prev));
 	}
 }
 
-function hideButton(button) {
-	button.style.visibility = 'hidden';
+// Hide button
+function hide(element) {
+	element.style.visibility = 'hidden';
 }
 
-function showButton(button) {
-	button.style.visibility = 'visible';
+// Display button
+function show(element) {
+	element.style.visibility = 'visible';
 }
 
-
-// 
-function updateEmployee(clickedButton, otherButton) {
-	// Ensure unclicked button is displayed
-	showButton(otherButton);
-
-	if(clickedButton.textContent === 'Prev') {
-		currentIndex = currentIndex - 1;
-		updateInfo(currentIndex);
-		currentIndex === 0
-			? hideButton(clickedButton)
-			: showButton(clickedButton);
-	} 
-	else {
-		currentIndex = currentIndex + 1;
-		updateInfo(currentIndex);
-		currentIndex === 11
-			? hideButton(clickedButton)
-			: showButton(clickedButton);
-	}
+// Update modal state when 'Prev' or 'Next' button is clicked
+function updateModal(clickedButton, otherButton) {
+	// Update currentIndex global variable
+	// Minus 1 if 'Prev' button clicked
+	// Plus 1 if 'Next' button clicked
+	currentIndex = (clickedButton.textContent === 'Prev') 
+		? (currentIndex - 1) 
+		: (currentIndex + 1);
+	
+	// Hide clicked button if currentIndex is first or last
+	if (currentIndex === 0) hide(clickedButton);
+	if (currentIndex === 11) hide(clickedButton);
+	
+	// Update employee information in modal
+	updateInfo(currentIndex);
+	// Ensure non-clicked button is now displayed
+	show(otherButton);
 }
