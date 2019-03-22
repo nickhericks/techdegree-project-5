@@ -82,7 +82,7 @@ function openModal(event) {
 		currentIndex = employeeList.findIndex(employee => employee.email === employeeEmail);
 
 		const container = document.createElement('div');
-		container.classList.add("modal-container");
+		container.classList.add('modal-container');
 
 		container.innerHTML = `
 			<div class="modal">
@@ -108,25 +108,48 @@ function openModal(event) {
 		const prevButton = document.querySelector('#modal-prev');
 		const nextButton = document.querySelector('#modal-next');
 
-		prevButton.addEventListener('click', e => previousEmployee(e));
-		nextButton.addEventListener('click', e => nextEmployee(e));
+		if(currentIndex === 0) {
+			hideButton(prevButton);
+		}
+
+		if(currentIndex === 11) {
+			hideButton(nextButton);
+		}
+
+		prevButton.addEventListener('click', () => updateEmployee(prevButton, nextButton)
+		);
+		nextButton.addEventListener('click', () => updateEmployee(nextButton, prevButton)
+		);
 
 	}
 }
 
+function hideButton(button) {
+	button.style.visibility = 'hidden';
+}
 
-function previousEmployee(event) {
-	if(currentIndex !== 0) {
+function showButton(button) {
+	button.style.visibility = 'visible';
+}
+
+
+// 
+function updateEmployee(clickedButton, otherButton) {
+	// Ensure unclicked button is displayed
+	showButton(otherButton);
+
+	if(clickedButton.textContent === 'Prev') {
 		currentIndex = currentIndex - 1;
 		updateInfo(currentIndex);
-		console.log(currentIndex);
-	}
-}
-
-function nextEmployee(event) {
-	if(currentIndex !== 11) {
+		currentIndex === 0
+			? hideButton(clickedButton)
+			: showButton(clickedButton);
+	} 
+	else {
 		currentIndex = currentIndex + 1;
 		updateInfo(currentIndex);
-		console.log(currentIndex);
+		currentIndex === 11
+			? hideButton(clickedButton)
+			: showButton(clickedButton);
 	}
 }
