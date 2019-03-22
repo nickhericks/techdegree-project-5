@@ -4,11 +4,31 @@ let currentIndex;
 
 gallery.addEventListener('click', e => openModal(e));
 
+// =====================================
+// FETCH REQUEST
+// =====================================
 
 // Request data for 12 random users from the US
 fetch('https://randomuser.me/api/?results=12&nat=us')
 	.then(response => response.json())
 	.then(data => displayEmployees(data.results));
+
+
+// =====================================
+// HELPER FUNCTIONS
+// =====================================
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Print employee cards to the page
 function displayEmployees(employees) {
@@ -79,10 +99,10 @@ function openModal(event) {
 	// If an ancestor element with the class of 'card' exists
 	if(card) {
 		const employeeEmail = card.children[1].children[1].textContent;
-		currentIndex = employeeList.findIndex(employee => employee.email === employeeEmail);
-
 		const container = document.createElement('div');
 		container.classList.add('modal-container');
+
+		currentIndex = employeeList.findIndex(employee => employee.email === employeeEmail);
 
 		container.innerHTML = `
 			<div class="modal">
@@ -101,8 +121,8 @@ function openModal(event) {
 		updateInfo(currentIndex);
 
 		const closeButton = document.querySelector('.modal-close-btn');
-		const prev = document.querySelector("#modal-prev");
-    const next = document.querySelector("#modal-next");
+		const prev = document.querySelector('#modal-prev');
+		const next = document.querySelector('#modal-next');
 
 		closeButton.addEventListener('click', e => closeModal(e));
 
