@@ -1,14 +1,18 @@
 const searchContainer = document.querySelector('.search-container');
 const gallery = document.querySelector('#gallery');
 let fullEmployeeList = [];
+let filteredEmployeeList = [];
+let searchString = '';
 let currentIndex;
 
+// Add search bar to the page
+addSearch();
 
-
+// Open modal when user clicks employee card
 gallery.addEventListener('click', e => openModal(e));
 
 // =====================================
-// FETCH REQUEST
+//    FETCH REQUEST
 // =====================================
 
 // Request data for 12 random users from the US
@@ -16,77 +20,27 @@ fetch('https://randomuser.me/api/?results=12&nat=us')
 	.then(response => response.json())
 	.then(data => displayEmployees(data.results));
 
+	
 // =====================================
-// HELPER FUNCTIONS
+//    GENERAL
 // =====================================
-
-
-let formHTML = `
-	<form action="#" method="get">
-		<input type="search" id="search-input" class="search-input" placeholder="Search...">
-	</form>
-`;
-
-searchContainer.innerHTML = formHTML;
-
-
-
-
-
-const searchInput = document.querySelector('#search-input');
-let searchString = '';
-let filteredEmployeeList = fullEmployeeList;
-
-
-// Update filteredEmployeeList using search query and refresh page
-const newQuery = () => {
-	filteredEmployeeList = [];
-
-	// For each item in the full employee list
-	for (let i = 0; i < fullEmployeeList.length; i++) {
-		// Select the employee's name as a string
-		let name = fullEmployeeList[i].name.first;
-		// If the student's name contains the search query substring
-		if (name.includes(searchString)) {
-			// Add student item HTML to filteredEmployeeList
-			filteredEmployeeList.push(fullEmployeeList[i]);
-		}
-	}
-	console.log(filteredEmployeeList);
-	displayEmployees(filteredEmployeeList);
-};
-
-// Call search() function when input value changes
-searchInput.addEventListener('input', () => {
-	searchString = searchInput.value;
-	newQuery();
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Print employee cards to the page
 function displayEmployees(employees) {
-	let html = '';
+	// Update filteredEmployeeList
+	filteredEmployeeList = employees;
 
-	if(fullEmployeeList.length === 0) {
+	// Set fullEmployeeList array if not already done
+	if (fullEmployeeList.length === 0) {
 		fullEmployeeList = employees;
 	}
-	
-	filteredEmployeeList = employees;
-	
-	employees.map(function(employee) {
-		html += `
+
+	// Create string variable to hold all gallery HTML
+	let galleryHTML = '';
+
+	// Iterate through employees and create HTML card for each
+	employees.map(function (employee) {
+		galleryHTML += `
 			<div class="card">
 				<div class="card-img-container">
 					<img class="card-img" src="${employee.picture.large}"
@@ -100,21 +54,67 @@ function displayEmployees(employees) {
 			</div>
 		`;
 	});
-	gallery.innerHTML = html;
+
+	// Add all employee cards to the page
+	gallery.innerHTML = galleryHTML;
 }
 
 
-// Close modal
-function closeModal() {
-	const modalContainer = document.querySelector('.modal-container');
-	modalContainer.remove();
+// =====================================
+//    SEARCH
+// =====================================
+
+// Add the search bar to to page
+function addSearch() {
+	let formHTML = `
+		<form action="#" method="get">
+			<input type="search" id="search-input" class="search-input" placeholder="Search...">
+		</form>
+	`;
+	// Add search elements to the page
+	searchContainer.innerHTML = formHTML;
+
+	const searchInput = document.querySelector('#search-input');
+
+	// Call search() function when input value changes
+	searchInput.addEventListener('input', () => {
+		searchString = searchInput.value;
+		newQuery();
+	});
 }
 
+// Update filteredEmployeeList using search query and update cards on page
+const newQuery = () => {
+	filteredEmployeeList = [];
+
+	// For each item in the full employee list
+	for (let i = 0; i < fullEmployeeList.length; i++) {
+		// Select the employee's full name as a string
+		let name = `
+			${fullEmployeeList[i].name.first} ${fullEmployeeList[i].name.last}
+		`;
+		// If the employee's name contains the search query substring
+		if (name.includes(searchString)) {
+			// Add employee to filteredEmployeeList array
+			filteredEmployeeList.push(fullEmployeeList[i]);
+		}
+	}
+
+	// Update employee cards on page based on filteredEmployeeList array
+	displayEmployees(filteredEmployeeList);
+};
 
 
+// =====================================
+//    MODAL
+// =====================================
+
+// Update employee info in the modal
 function updateInfo(employeeIndex) {
+	// Get employee object based on array index
 	let employee = filteredEmployeeList[employeeIndex];
 
+	// 
 	let birthday = new Date(employee.dob.date);
 	birthday = birthday.getMonth() + 1 + '/' +
 		birthday.getDate() + '/' +
@@ -139,6 +139,13 @@ function updateInfo(employeeIndex) {
 
 	document.querySelector('.modal-info-container').innerHTML = infoHTML;
 
+}
+
+
+// Close modal
+function closeModal() {
+	const modalContainer = document.querySelector('.modal-container');
+	modalContainer.remove();
 }
 
 
@@ -181,6 +188,14 @@ function openModal(event) {
 
 		prev.addEventListener('click', () => updateModal(prev, next));
 		next.addEventListener('click', () => updateModal(next, prev));
+
+		// Close modal if user clicks on anything except the modal
+		document.querySelector('.modal-container').addEventListener('click', e => {
+			if (!e.target.closest('.modal') 
+					&& !e.target.closest('.modal-btn-container')) {
+				closeModal();
+			}
+		});
 	}
 }
 
@@ -212,3 +227,5 @@ function updateModal(clickedButton, otherButton) {
 	// Ensure non-clicked button is now displayed
 	show(otherButton);
 }
+
+
