@@ -83,6 +83,7 @@ function addSearch() {
 	});
 }
 
+
 // Update filteredEmployeeList using search query and update cards on page
 const newQuery = () => {
 	filteredEmployeeList = [];
@@ -109,17 +110,30 @@ const newQuery = () => {
 //    MODAL
 // =====================================
 
+// Hide button
+function hide(element) {
+	element.style.visibility = 'hidden';
+}
+
+
+// Display button
+function show(element) {
+	element.style.visibility = 'visible';
+}
+
+
 // Update employee info in the modal
 function updateInfo(employeeIndex) {
 	// Get employee object based on array index
 	let employee = filteredEmployeeList[employeeIndex];
 
-	// 
+	// Format birthday
 	let birthday = new Date(employee.dob.date);
 	birthday = birthday.getMonth() + 1 + '/' +
 		birthday.getDate() + '/' +
 		birthday.getFullYear();
 
+	// Build HTML for modal info section
 	let infoHTML =  `
 		<img class="modal-img" src="${employee.picture.large}" alt="profile picture">
 		<h3 id="name" class="modal-name cap">
@@ -137,8 +151,8 @@ function updateInfo(employeeIndex) {
 		<p class="modal-text">Birthday: ${birthday}</p>
 	`;
 
+	// Add modal HTML to page
 	document.querySelector('.modal-info-container').innerHTML = infoHTML;
-
 }
 
 
@@ -155,12 +169,16 @@ function openModal(event) {
 	let card = event.target.closest('.card');
 	// If an ancestor element with the class of 'card' exists
 	if(card) {
+		// Get email of clicked card
 		const employeeEmail = card.children[1].children[1].textContent;
+
 		const container = document.createElement('div');
 		container.classList.add('modal-container');
 
+		// Use email to find index of employee in filteredEmployeeList array
 		currentIndex = filteredEmployeeList.findIndex(employee => employee.email === employeeEmail);
 
+		// Build HTML for modal
 		container.innerHTML = `
 			<div class="modal">
 				<button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -173,19 +191,24 @@ function openModal(event) {
 			</div>
 		`;
 
+		// Add modal to page
 		document.querySelector('body').append(container);
 
+		// Update employee info in the modal
 		updateInfo(currentIndex);
 
 		const closeButton = document.querySelector('.modal-close-btn');
 		const prev = document.querySelector('#modal-prev');
 		const next = document.querySelector('#modal-next');
 
+		// Close modal if user clicks modal close button
 		closeButton.addEventListener('click', e => closeModal(e));
 
+		// Hide appropriate button if first or last card is clicked
 		if (currentIndex === 0) hide(prev);
 		if (currentIndex === filteredEmployeeList.length - 1) hide(next);
 
+		// Listen for "prev' and 'Next' button clicks and update modal info
 		prev.addEventListener('click', () => updateModal(prev, next));
 		next.addEventListener('click', () => updateModal(next, prev));
 
@@ -199,15 +222,6 @@ function openModal(event) {
 	}
 }
 
-// Hide button
-function hide(element) {
-	element.style.visibility = 'hidden';
-}
-
-// Display button
-function show(element) {
-	element.style.visibility = 'visible';
-}
 
 // Update modal state when 'Prev' or 'Next' button is clicked
 function updateModal(clickedButton, otherButton) {
@@ -227,5 +241,3 @@ function updateModal(clickedButton, otherButton) {
 	// Ensure non-clicked button is now displayed
 	show(otherButton);
 }
-
-
