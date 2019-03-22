@@ -13,7 +13,6 @@ fetch('https://randomuser.me/api/?results=12&nat=us')
 	.then(response => response.json())
 	.then(data => displayEmployees(data.results));
 
-
 // =====================================
 // HELPER FUNCTIONS
 // =====================================
