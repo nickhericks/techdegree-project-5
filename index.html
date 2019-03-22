@@ -41,7 +41,18 @@
 
         <div id="gallery" class="gallery"></div>
 
-        <!-- =======================
+				<!-- =======================
+					
+
+
+document.querySelector('.modal-container').addEventListener('click', e => {
+	if (!e.target.closest('.modal')) {
+		closeModal();
+	}
+});
+
+
+
             <div class="modal-container">
                 <div class="modal">
                     <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>

@@ -1,21 +1,20 @@
 const gallery = document.querySelector('#gallery');
 let employeeList;
+let currentIndex;
 
 gallery.addEventListener('click', e => openModal(e));
 
 
-// Request data for 12 random users
-fetch('https://randomuser.me/api/?results=12')
-	.then( response => response.json() )
-	.then( data => displayEmployees(data.results) );
+// Request data for 12 random users from the US
+fetch('https://randomuser.me/api/?results=12&nat=us')
+	.then(response => response.json())
+	.then(data => displayEmployees(data.results));
 
+// Print employee cards to the page
 function displayEmployees(employees) {
-	// console.log(employees);
-	employeeList = employees;
-	// console.log(employeeList);
-
 	let html = '';
-
+	employeeList = employees;
+	console.log(employeeList);
 	employees.map(function(employee) {
 		html += `
 			<div class="card">
@@ -34,10 +33,42 @@ function displayEmployees(employees) {
 	gallery.innerHTML = html;
 }
 
+
 // Close modal
 function closeModal() {
 	const modalContainer = document.querySelector('.modal-container');
 	modalContainer.remove();
+}
+
+
+
+function updateInfo(employeeIndex) {
+	let employee = employeeList[employeeIndex];
+
+	let birthday = new Date(employee.dob.date);
+	birthday = birthday.getMonth() + 1 + '/' +
+		birthday.getDate() + '/' +
+		birthday.getFullYear();
+
+	let infoHTML =  `
+		<img class="modal-img" src="${employee.picture.large}" alt="profile picture">
+		<h3 id="name" class="modal-name cap">
+			${employee.name.first} ${employee.name.last}
+		</h3>
+		<p class="modal-text">${employee.email}</p>
+		<p class="modal-text cap">${employee.location.city}</p>
+		<hr>
+		<p class="modal-text">${employee.cell}</p>
+		<p class="modal-text cap">
+			${employee.location.street}, 
+			${employee.location.city}, 
+			${employee.location.state} ${employee.location.postcode}
+		</p>
+		<p class="modal-text">Birthday: ${birthday}</p>
+	`;
+
+	document.querySelector('.modal-info-container').innerHTML = infoHTML;
+
 }
 
 
@@ -47,55 +78,61 @@ function openModal(event) {
 	let card = event.target.closest('.card');
 	// If an ancestor element with the class of 'card' exists
 	if(card) {
-		// console.log(card);
 		const employeeEmail = card.children[1].children[1].textContent;
-		// console.log(employeeEmail);
+		currentIndex = employeeList.findIndex(employee => employee.email === employeeEmail);
 
-		const employee = employeeList.find(employee => employee.email === employeeEmail);
-		let birthday = new Date(employee.dob.date);
-		birthday = birthday.getMonth() + 1 + '/' + 
-									birthday.getDate() + '/' + 
-									birthday.getFullYear();
+		const container = document.createElement('div');
+		container.classList.add("modal-container");
 
-		// console.log(employee);
-
-		const modalHTML = `
-			<div class="modal-container">
-				<div class="modal">
-					<button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-					<div class="modal-info-container">
-						<img class="modal-img" src="${employee.picture.large}" alt="profile picture">
-						<h3 id="name" class="modal-name cap">
-							${employee.name.first} ${employee.name.last}
-						</h3>
-						<p class="modal-text">${employee.email}</p>
-						<p class="modal-text cap">${employee.location.city}</p>
-						<hr>
-						<p class="modal-text">${employee.cell}</p>
-						<p class="modal-text cap">
-							${employee.location.street}, 
-							${employee.location.city}, 
-							${employee.location.state} ${employee.location.postcode}
-						</p>
-						<p class="modal-text">Birthday: ${birthday}</p>
-					</div>
+		container.innerHTML = `
+			<div class="modal">
+				<button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+				<div class="modal-info-container">
 				</div>
+			</div>
+			<div class="modal-btn-container">
+				<button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+				<button type="button" id="modal-next" class="modal-next btn">Next</button>
 			</div>
 		`;
 
-		gallery.insertAdjacentHTML('afterend', modalHTML);
+		document.querySelector('body').append(container);
 
-		let closeButton = document.querySelector('.modal-close-btn');
+		updateInfo(currentIndex);
+
+
+		const closeButton = document.querySelector('.modal-close-btn');
 		closeButton.addEventListener('click', e => closeModal(e));
 
 
-		document.querySelector('.modal-container').addEventListener('click', e => {
-			if (!e.target.closest('.modal')) {
-				closeModal();
-			}
-		});
+		const prevButton = document.querySelector('#modal-prev');
+		const nextButton = document.querySelector('#modal-next');
+
+		prevButton.addEventListener('click', e => previousEmployee(e));
+		nextButton.addEventListener('click', e => nextEmployee(e));
+
+
+
+
+
 
 
 	}
 }
 
+
+function previousEmployee(event) {
+	if(currentIndex !== 0) {
+		currentIndex = currentIndex - 1;
+		updateInfo(currentIndex);
+		console.log(currentIndex);
+	}
+}
+
+function nextEmployee(event) {
+	if(currentIndex !== 11) {
+		currentIndex = currentIndex + 1;
+		updateInfo(currentIndex);
+		console.log(currentIndex);
+	}
+}
