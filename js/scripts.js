@@ -1,8 +1,7 @@
 const gallery = document.querySelector('#gallery');
+let employeeList;
 
-
-
-
+gallery.addEventListener('click', e => openModal(e));
 
 
 // Request data for 12 random users
@@ -12,6 +11,8 @@ fetch('https://randomuser.me/api/?results=12')
 
 function displayEmployees(employees) {
 	console.log(employees);
+	employeeList = employees;
+	console.log(employeeList);
 
 	let html = '';
 
@@ -30,6 +31,25 @@ function displayEmployees(employees) {
 			</div>
 		`;
 	});
-
 	gallery.innerHTML = html;
+}
+
+
+
+function openModal(event) {
+	// Find ancestor element with the class of 'card'
+	let card = event.target.closest('.card');
+	// If an ancestor element with the class of 'card' exists
+	if(card) {
+		console.log(card);
+		let employeeEmail = card.children[1].children[1].textContent;
+		console.log(employeeEmail);
+
+		
+
+
+
+
+
+	}
 }
