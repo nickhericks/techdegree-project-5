@@ -15,7 +15,7 @@ gallery.addEventListener('click', e => openModal(e));
 //    FETCH REQUEST
 // =====================================
 
-// Request data for 12 random users from the US
+// Request data for 12 random users from the Random User Generator API
 fetch('https://randomuser.me/api/?results=12&nat=us')
 	.then(response => response.json())
 	.then(data => displayEmployees(data.results));
