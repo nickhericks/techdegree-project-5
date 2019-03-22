@@ -2,7 +2,7 @@
    Public API Request
 ======================================== */
 
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Nunito|Alegreya:500,900');
 
 * {
 	box-sizing: border-box;
@@ -15,7 +15,6 @@ html, body {
 
 body {
 		font-family: "Nunito", sans-serif;
-		/* font-family: 'Michroma', sans-serif; */
     text-align: center;
     background: rgba(235, 235, 235, 0.9);
 }
@@ -30,9 +29,16 @@ header {
 }
 
 header h1 {
-    font-size: 1.25em;
+    font-size: 1.25rem;
     color: rgba(50, 50, 50, 0.9);
     margin-top: 35px;
+}
+
+.company-name {
+	font-family: 'Alegreya', serif;
+	font-weight: 100;
+	font-size: 2rem;
+	color: rgb(10, 118, 180);
 }
 
 .search-input {

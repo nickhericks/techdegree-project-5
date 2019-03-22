@@ -111,12 +111,6 @@ function openModal(event) {
 		prevButton.addEventListener('click', e => previousEmployee(e));
 		nextButton.addEventListener('click', e => nextEmployee(e));
 
-
-
-
-
-
-
 	}
 }
 
