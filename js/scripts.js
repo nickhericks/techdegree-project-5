@@ -1,6 +1,9 @@
+const searchContainer = document.querySelector('.search-container');
 const gallery = document.querySelector('#gallery');
-let employeeList;
+let fullEmployeeList = [];
 let currentIndex;
+
+
 
 gallery.addEventListener('click', e => openModal(e));
 
@@ -18,6 +21,49 @@ fetch('https://randomuser.me/api/?results=12&nat=us')
 // =====================================
 
 
+let formHTML = `
+	<form action="#" method="get">
+		<input type="search" id="search-input" class="search-input" placeholder="Search...">
+	</form>
+`;
+
+searchContainer.innerHTML = formHTML;
+
+
+
+
+
+const searchInput = document.querySelector('#search-input');
+let searchString = '';
+let filteredEmployeeList = fullEmployeeList;
+
+
+// Update filteredEmployeeList using search query and refresh page
+const newQuery = () => {
+	filteredEmployeeList = [];
+
+	// For each item in the full employee list
+	for (let i = 0; i < fullEmployeeList.length; i++) {
+		// Select the employee's name as a string
+		let name = fullEmployeeList[i].name.first;
+		// If the student's name contains the search query substring
+		if (name.includes(searchString)) {
+			// Add student item HTML to filteredEmployeeList
+			filteredEmployeeList.push(fullEmployeeList[i]);
+		}
+	}
+	console.log(filteredEmployeeList);
+	displayEmployees(filteredEmployeeList);
+};
+
+// Call search() function when input value changes
+searchInput.addEventListener('input', () => {
+	searchString = searchInput.value;
+	newQuery();
+});
+
+
+
 
 
 
@@ -32,8 +78,13 @@ fetch('https://randomuser.me/api/?results=12&nat=us')
 // Print employee cards to the page
 function displayEmployees(employees) {
 	let html = '';
-	employeeList = employees;
-	// console.log(employeeList);
+
+	if(fullEmployeeList.length === 0) {
+		fullEmployeeList = employees;
+	}
+	
+	filteredEmployeeList = employees;
+	
 	employees.map(function(employee) {
 		html += `
 			<div class="card">
@@ -62,7 +113,7 @@ function closeModal() {
 
 
 function updateInfo(employeeIndex) {
-	let employee = employeeList[employeeIndex];
+	let employee = filteredEmployeeList[employeeIndex];
 
 	let birthday = new Date(employee.dob.date);
 	birthday = birthday.getMonth() + 1 + '/' +
@@ -101,7 +152,7 @@ function openModal(event) {
 		const container = document.createElement('div');
 		container.classList.add('modal-container');
 
-		currentIndex = employeeList.findIndex(employee => employee.email === employeeEmail);
+		currentIndex = filteredEmployeeList.findIndex(employee => employee.email === employeeEmail);
 
 		container.innerHTML = `
 			<div class="modal">
@@ -126,7 +177,7 @@ function openModal(event) {
 		closeButton.addEventListener('click', e => closeModal(e));
 
 		if (currentIndex === 0) hide(prev);
-		if (currentIndex === 11) hide(next);
+		if (currentIndex === filteredEmployeeList.length - 1) hide(next);
 
 		prev.addEventListener('click', () => updateModal(prev, next));
 		next.addEventListener('click', () => updateModal(next, prev));
@@ -154,7 +205,7 @@ function updateModal(clickedButton, otherButton) {
 	
 	// Hide clicked button if currentIndex is first or last
 	if (currentIndex === 0) hide(clickedButton);
-	if (currentIndex === 11) hide(clickedButton);
+	if (currentIndex === filteredEmployeeList.length - 1) hide(clickedButton);
 	
 	// Update employee information in modal
 	updateInfo(currentIndex);
