@@ -6,11 +6,13 @@ This project uses JavaScript to create an employee directory by communicating wi
 
 ---
 
-<img src="https://res.cloudinary.com/dtqevfsxh/image/upload/v1553282635/portfolio/publicApiRequest.png" width="899px">
 
 ## View project
-
 :mag: Live version available at [nickhericks.github.io/techdegree-project-5/](https://nickhericks.github.io/techdegree-project-5/)
+
+<br><br>
+
+<img src="https://res.cloudinary.com/dtqevfsxh/image/upload/v1553282635/portfolio/publicApiRequest.png" width="899px">
 
 ## Project objective
 
